@@ -81,15 +81,16 @@ Selanjutnya uraikanlah seluruh variabel atau fitur pada data. Sebagai contoh:
 **Rubrik/Kriteria Tambahan (Opsional)**:
 - Melakukan beberapa tahapan yang diperlukan untuk memahami data, contohnya teknik visualisasi data atau exploratory data analysis.
 | # | column | Non-Null count | Dtype |
-| 1 | id|1169 non-null |int |
+|---|--------|----------------|-------|
+| 1 | id | 1169 non-null | int |
 | 2 | nama | 1169 non-null | object |
 | 3 | alamat | 1167 non-null | object |
 | 4 | rating | 1168 non-null | float64 |
 | 5 | jumlah_review | 1168 not-null | float64 |
 | 6 | deskripsi | 1169 not-null | object |
 | 7 | koordinat | 1169 non-null | object | 
-| 8 |url|1169 non-null|object| 
-| 9 |provinsi|1169 non-null|object| 
+| 8 | url | 1169 non-null | object | 
+| 9 | provinsi| 1169 non-null | object | 
 | 10 | foto | 1169 non-null | object | 
 | 11 | kategori | 1169 non-null | object | 
 ## Data Preparation
