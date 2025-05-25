@@ -60,20 +60,38 @@ logistic regression| akurasi 52.0% dan f1 score 44.0%, ini menunjukan  performa 
 
 ## Data Understanding
 
-saya menggunakan teknik scraping untuk mendapatkan dataset tersebut, pada tersebut terdapat 1167 baris dan 8 kolom
+saya menggunakan teknik scraping untuk mendapatkan dataset tersebut, pada tersebut terdapat 1169 baris dan 11 kolom yang saya simpan di [github_saya](https://github.com/arif-maulana-insaf/submission-1_mlterapan)
 
 Paragraf awal bagian ini menjelaskan informasi mengenai data yang Anda gunakan dalam proyek. Sertakan juga sumber atau tautan untuk mengunduh dataset. Contoh: [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Restaurant+%26+consumer+data).
 
 Selanjutnya uraikanlah seluruh variabel atau fitur pada data. Sebagai contoh:  
 
 ### Variabel-variabel pada Restaurant UCI dataset adalah sebagai berikut:
-- accepts : merupakan jenis pembayaran yang diterima pada restoran tertentu.
-- cuisine : merupakan jenis masakan yang disajikan pada restoran.
-- dst
-
+- id = nomor urutan
+- nama = nama tempat
+- alamat = alamat tempat
+- rating = rating tempat
+- jumlah review = jumlah review dari lokasi
+- deskripsi = dekripsi tempat
+- koordinat = titik lokasi
+- url = link lokasi di maps
+- provinsi = lokasi provinsi
+- foto = foto lokasi
+- kategori = kategori wisata
 **Rubrik/Kriteria Tambahan (Opsional)**:
 - Melakukan beberapa tahapan yang diperlukan untuk memahami data, contohnya teknik visualisasi data atau exploratory data analysis.
-
+|#|column| Non-Null count| Dtype|
+|1|id|1169 non-null|int|
+|2|nama|1169 non-null|object|
+|3|alamat|1167 non-null|object|
+|4|rating|1168 non-null|float64|
+|5|jumlah_review|1168 not-null|float64|
+|6|deskripsi|1169 not-null|object|
+|7|koordinat|1169 non-null|object| 
+|8|url|1169 non-null|object| 
+|9|provinsi|1169 non-null|object| 
+|10|foto|1169 non-null|object| 
+|11|kategori|1169 non-null|object| 
 ## Data Preparation
 Pada bagian ini Anda menerapkan dan menyebutkan teknik data preparation yang dilakukan. Teknik yang digunakan pada notebook dan laporan harus berurutan.
 
