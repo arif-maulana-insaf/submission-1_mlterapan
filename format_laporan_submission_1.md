@@ -80,6 +80,7 @@ Selanjutnya uraikanlah seluruh variabel atau fitur pada data. Sebagai contoh:
 - kategori = kategori wisata
 **Rubrik/Kriteria Tambahan (Opsional)**:
 - Melakukan beberapa tahapan yang diperlukan untuk memahami data, contohnya teknik visualisasi data atau exploratory data analysis.
+
 | # | column | Non-Null count | Dtype |
 |---|--------|----------------|-------|
 | 1 | id | 1169 non-null | int |
