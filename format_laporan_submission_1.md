@@ -26,20 +26,28 @@ Menjelaskan tujuan dari pernyataan masalah:
 - menggunakan informasi kategori dan provinsi untuk memperkaya fitur input bagi model prediktif
 
 
-**Rubrik/Kriteria Tambahan (Opsional)**:
-
-
-- Menambahkan bagian “Solution Statement” yang menguraikan cara untuk meraih goals. Bagian ini dibuat dengan ketentuan sebagai berikut: 
-
-    ### Solution statements
-
-|model | hasil |
-|------|-------|
-|random forest| akurasi 78.4% dan f1 score 75.2%, ini menunjukan performa terbaik diantara semua model|
-|KNN| akurasi 59.1% dan f1 score 53.4%, ini menunjukan performa yang buruk|
-|SVM| akurasi 46.0% dan f1 score 0%, ini menunjukan peforma yang paling buruk diantara yang lain|
-logistic regression| akurasi 56.8% dan f1 score 50.5%, ini menunjukan  performa yang buruk|
-|decision tree| akurasi 76.9% dan f1 score 73.2%, ini menunjukan performa yang lumayan ketimbang tang lain akan tetapi lebih rendah dari random forest|
+### Solution statements
+Untuk mencapai tujuan mengembangkan model klasifikasi popularitas tempat wisata dan memanfaatkan fitur kategori serta provinsi, beberapa pendekatan solusi yang dapat diterapkan adalah sebagai berikut:
+1. Menerapkan dan Membandingkan Berbagai Algoritma Klasifikasi
+Menggunakan lebih dari satu algoritma klasifikasi untuk membangun model prediksi yang akurat terhadap status popularitas tempat wisata. Beberapa algoritma yang digunakan antara lain:
+- Decision Tree
+- Random Forest
+- Logistic Regression
+- Support Vector Machine (SVM)
+- K-Nearest Neighbors (KNN)
+2. Feature Engineering dan Pemanfaatan Data Kategorikal
+Melakukan encoding pada fitur kategorikal seperti:
+- Kategori tempat wisata (e.g., pantai, taman, museum)
+- Provinsi (e.g., Bali, Jawa Barat)
+Beberapa teknik yang digunakan:
+- One-Hot Encoding atau Target Encoding untuk mengubah data kategorikal menjadi fitur numerik yang bisa diproses oleh model.
+- Penggabungan data rating dan jumlah review sebagai fitur numerik tambahan.
+3. Hyperparameter Tuning pada Model Terbaik
+Melakukan optimasi hyperparameter pada model dengan performa terbaik (misalnya Random Forest atau Decision Tree) menggunakan:
+- Grid Search CV atau Randomized Search CV
+Parameter yang bisa dioptimalkan misalnya:
+- max_depth, n_estimators, min_samples_split (untuk Random Forest dan Decision Tree)
+- C dan kernel (untuk SVM)
 
 ## Data Understanding
 
@@ -59,9 +67,6 @@ saya menggunakan teknik scraping untuk mendapatkan dataset tersebut, pada terseb
 - foto = foto lokasi
 - kategori = kategori wisata
 
-
-**Rubrik/Kriteria Tambahan (Opsional)**:
-- Melakukan beberapa tahapan yang diperlukan untuk memahami data, contohnya teknik visualisasi data atau exploratory data analysis.
 
 ## Exploratory Data Analysis - deskripsi variabel
 | # | column | Non-Null count | Dtype |
@@ -158,11 +163,6 @@ Pada bagian ini Anda menerapkan dan menyebutkan teknik data preparation yang dil
 | 9  | StandardScaler                | Menstandarkan skala fitur numerik agar model tidak bias terhadap fitur dengan skala lebih besar. dan agat bisa dipakai oleh random forest dan decision tree yang mana tidak membutuhkan stadarscale dalam pediksi modelnya   |
 
 
-
-**Rubrik/Kriteria Tambahan (Opsional)**: 
-- Menjelaskan proses data preparation yang dilakukan
-- Menjelaskan alasan mengapa diperlukan tahapan data preparation tersebut.
-
 ## Modeling
 Tahapan ini membahas mengenai model machine learning yang digunakan untuk menyelesaikan permasalahan. Anda perlu menjelaskan tahapan dan parameter yang digunakan pada proses pemodelan.
 
@@ -174,6 +174,7 @@ Tahapan ini membahas mengenai model machine learning yang digunakan untuk menyel
 | 4  | **Logistic Regression**          | `max_iter=1000`, `class_weight='balanced'` – Model linier klasik untuk klasifikasi, ditambah `StandardScaler()`.                                                            |
 | 5  | **Decision Tree**                | `max_depth=3`, `class_weight='balanced'`, `False` – Bekerja tanpa perlu scaling. Depth kecil menghindari overfitting.                                                                |
 
+
 ### kelebihan dan kekurangan 
 | Model             | Kelebihan | Kekurangan |
 | ----------------- | --------- | ---------- |
@@ -184,22 +185,78 @@ Tahapan ini membahas mengenai model machine learning yang digunakan untuk menyel
 | **logistic regression** | cepat dan efisien untuk klasifikasi linear, mudah diinterpertesikan | kurang fleksibel untuk data non linear, bisa underfitting jika relasi antar fitur kompleks |
 
 
-**Rubrik/Kriteria Tambahan (Opsional)**: 
-- Menjelaskan kelebihan dan kekurangan dari setiap algoritma yang digunakan.
-- Jika menggunakan satu algoritma pada solution statement, lakukan proses improvement terhadap model dengan hyperparameter tuning. **Jelaskan proses improvement yang dilakukan**.
-- Jika menggunakan dua atau lebih algoritma pada solution statement, maka pilih model terbaik sebagai solusi. **Jelaskan mengapa memilih model tersebut sebagai model terbaik**.
-
 ## Evaluation
 Pada bagian ini anda perlu menyebutkan metrik evaluasi yang digunakan. Lalu anda perlu menjelaskan hasil proyek berdasarkan metrik evaluasi yang digunakan.
+pada bagian evaluasi ini saya menggunakan
 
-Sebagai contoh, Anda memiih kasus klasifikasi dan menggunakan metrik **akurasi, precision, recall, dan F1 score**. Jelaskan mengenai beberapa hal berikut:
-- Penjelasan mengenai metrik yang digunakan
-- Menjelaskan hasil proyek berdasarkan metrik evaluasi
+| # | komponen evaluasi | tujuan |
+|---|--------------------|--------|
+| 1 | **akurasi** | yang bertujuan untuk melihat hasil data, dengan formula $\frac{TP + TN}{TP + TN + FP + FN}$ |
+| 2 | **klasifikasi report** | dalam klasifikasi report Precision: Dari semua yang diprediksi positif, berapa yang benar-benar positif , dengan formula $\frac{TP}{TP + FP}$, Recall: Dari semua yang sebenarnya positif, berapa yang berhasil terprediksi dengan formula $\frac{TP}{TP + FN}$, F1-score: Gabungan dari precision dan recall, dengan formula $2 \times \frac{Precision \times Recall}{Precision + Recall}$, Support: Jumlah data per kelas |
+| 3 | **perbandingan evaluasi model** | melihat evaluasi dari setiap model |
+| 4 | **confusion matrix** | yaitu untuk melihat jumlah prediksi benar dan salah |
+| 5 | **roc curve dan auc score** | ROC Curve menunjukkan perbandingan antara True Positive Rate (Recall) dan False Positive Rate, AUC (Area Under Curve) = seberapa besar area di bawah kurva ROC. Semakin dekat ke 1, semakin baik |
+#### catatan 
+- **TP** = True Positive
+- **TN** = True Negative
+- **FP** = False Positive
+- **FN** = False Negative
 
-Ingatlah, metrik evaluasi yang digunakan harus sesuai dengan konteks data, problem statement, dan solusi yang diinginkan.
 
-**Rubrik/Kriteria Tambahan (Opsional)**: 
-- Menjelaskan formula metrik dan bagaimana metrik tersebut bekerja.
+### berikut adalah hasil dan perbandingan yang saya dapatkan
+
+| # | Model                   | Akurasi (%) | F1-Score | Precision (Populer) | Recall (Populer) | Evaluasi                                                                                                    |
+| -- | ----------------------- | ----------- | -------- | ------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------- |
+| 1  | **Random Forest**       | 78.87       | 0.76     | 0.97                | 0.62             | Performa terbaik. Akurasi tinggi dan presisi sangat baik. Recall agak rendah. Cocok untuk penggunaan utama. |
+| 2  | **Decision Tree**       | 76.99       | 0.73     | 0.96                | 0.59             | Alternatif baik, mirip Random Forest namun sedikit lebih rendah. Komputasi lebih ringan.                    |
+| 3  | **K-Nearest Neighbors** | 59.15       | 0.53     | 0.68                | 0.44             | Performa cukup buruk. Perlu tuning parameter. Sensitif terhadap distribusi data.                            |
+| 4  | **Logistic Regression** | 56.81       | 0.51     | 0.64                | 0.42             | Hasil kurang memuaskan. Sulit membedakan tempat populer dan tidak populer.                                  |
+| 5  | **SVM**                 | 46.95       | 0.00     | 0.00                | 0.00             | Gagal mengenali kelas populer. Tidak layak digunakan tanpa perbaikan skala/fit.                             |
+
+### perbandingan evaluasi model 
+![image](https://github.com/user-attachments/assets/f682bf42-f32b-4159-b803-6947c78ff0ce)
+
+dapaat dilihat dari perbandingan hasil evalusai tersebut random forest dan decision tree adalah model yang paling seimbang dari yang lainnya
+
+### confusion matrix
+![image](https://github.com/user-attachments/assets/c9667c6a-3861-472c-9ae6-b4b99376523f)
+
+pada tp hanya 2, maksudnya dari total kesalahan hanya 2 yang populer itu salah, akan tetapi fp 43 dari 113 data populer ini salah
+
+![image](https://github.com/user-attachments/assets/dafc27ad-175b-46b5-9029-8033bc2d9a0f)
+
+pada tp terdapat 34 kesalahan, yang mana ini mampu mendeteksi data populer tetapi banyak masalah, dan model ini kurang efektif
+
+![image](https://github.com/user-attachments/assets/99eb843d-df8d-4e54-933e-9d245012eef4)
+
+pada model ini sangat bermasalah karena fp terdapat 100 yang mana ini maksudnya model tidak mengenali tidak populer sama sekali
+
+![image](https://github.com/user-attachments/assets/aa06c230-13ea-48f7-9915-72b733de77d5)
+
+pada model ini fn 91 yang mana model tidak mengenali populer sama sekali karena model condong di tidak populer
+
+![image](https://github.com/user-attachments/assets/a5548ef5-eba3-4d9f-81f6-aa77af27d697)
+
+pada model ini fn 0, maksudnya model membaca 100% akurat untuk `tidak populer` akan tetapi masih bermasalah pada fn masih terdapat masalah 45 data klasifikasi yang salah 
+
+### roc curve dan auc score
+
+![image](https://github.com/user-attachments/assets/87c2412e-c37b-4c32-b04e-dc49e105be37)
+
+#### catatan 
+- True Positive Rate (TPR) = Sensitivitas = Recall
+- False Positive Rate (FPR) = 1 - Spesifisitas
+
+| Model                   | AUC      | Evaluasi                                                            |
+| ----------------------- | -------- | ------------------------------------------------------------------- |
+| **Decision Tree**       | **0.84** | **Terbaik** dalam membedakan kelas, sangat baik untuk klasifikasi.  |
+| **Random Forest**       | 0.81     | Hampir sebaik Decision Tree, performa stabil dan kuat.              |
+| **Logistic Regression** | 0.61     | Di atas tebakan acak, tapi jauh lebih rendah dari model tree-based. |
+| **KNN**                 | 0.60     | Performa buruk, hanya sedikit lebih baik dari tebakan acak.         |
+| **SVM**                 | 0.59     | Hampir sama seperti KNN, **sangat tidak optimal** pada dataset ini. |
+
+
+
 
 **---Ini adalah bagian akhir laporan---**
 
