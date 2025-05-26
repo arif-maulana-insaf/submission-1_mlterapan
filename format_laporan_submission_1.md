@@ -9,11 +9,6 @@ melalui analsis ini, diharapkan dapat membantu lokasi tempat yang belum dikenal 
 - melalui analsis pengelompokan ini, diharapkan dapat membantu lokasi tempat yang belum dikenal wisatawan lain untuk mengunjugi tempat-tempat tersebut
 - [referensi](https://ejournal.stipram.ac.id/index.php/kepariwisataan/article/view/209)
 
-- Jelaskan mengapa dan bagaimana masalah tersebut harus diselesaikan
-- Menyertakan hasil riset terkait atau referensi. Referensi yang diberikan harus berasal dari sumber yang kredibel dan author yang jelas.
-- Format Referensi dapat mengacu pada penulisan sitasi [IEEE](https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/IEEE_Reference_Guide.pdf), [APA](https://www.mendeley.com/guides/apa-citation-guide/) atau secara umum seperti [di sini](https://penerbitdeepublish.com/menulis-buku-membuat-sitasi-dengan-mudah/)
-- Sumber yang bisa digunakan [Scholar](https://scholar.google.com/)
-
 ## Business Understanding
 
 Bagian laporan ini mencakup:
@@ -40,15 +35,11 @@ Menjelaskan tujuan dari pernyataan masalah:
 
 |model | hasil |
 |------|-------|
-|random forest| akurasi 75.2% dan f1 score 69.8%, ini menunjukan performa terbaik diantara semua model|
-|KNN| akurasi 55.0% dan f1 score 50.0%, ini menunjukan performa yang buruk|
+|random forest| akurasi 78.4% dan f1 score 75.2%, ini menunjukan performa terbaik diantara semua model|
+|KNN| akurasi 59.1% dan f1 score 53.4%, ini menunjukan performa yang buruk|
 |SVM| akurasi 46.0% dan f1 score 0%, ini menunjukan peforma yang paling buruk diantara yang lain|
-logistic regression| akurasi 52.0% dan f1 score 44.0%, ini menunjukan  performa yang buruk|
-|decision tree| akurasi 72% dan f1 score, ini menunjukan performa yang lumayan ketimbang tang lain akan tetapi lebih rendah dari random forest|
-
-- s
-    - Mengajukan 2 atau lebih solution statement. Misalnya, menggunakan dua atau lebih algoritma untuk mencapai solusi yang diinginkan atau melakukan improvement pada baseline model dengan hyperparameter tuning.
-    - Solusi yang diberikan harus dapat terukur dengan metrik evaluasi.
+logistic regression| akurasi 56.8% dan f1 score 50.5%, ini menunjukan  performa yang buruk|
+|decision tree| akurasi 76.9% dan f1 score 73.2%, ini menunjukan performa yang lumayan ketimbang tang lain akan tetapi lebih rendah dari random forest|
 
 ## Data Understanding
 
@@ -154,16 +145,19 @@ ini adalah rata-rata rating per provinisi papua barat daya adalah provinsi yang 
 Pada bagian ini Anda menerapkan dan menyebutkan teknik data preparation yang dilakukan. Teknik yang digunakan pada notebook dan laporan harus berurutan.
 
 
-| # | teknik yang digunakan | alasan |
-| 1 | Tranformasi Log | alasan saya memakai log tranform ialah karena saya melihat pada column jumlah_review terdapat outlier yang sangat banyak yang akan mempengaruhi data sehingga saya memakai Tranformasi log agar lebih stabil |
-| 2 | Interquartile range (IQR) | untuk membuang outlier agar meminimalisir terjadinya outlier |
-| 3 | parshing string ke list  | untuk memungkinkan proses encoding fitur multikategori |
-| 4 | MultiLabel Encoding | agar model dapat membaca data kategorikal yang telah di ubah dalam bentuk numerik, dan karena model tidak dapat membaca dalam bentuk teks atau list |
-| 5 | one hot encoding | agar model dapat membaca data kategorikal yang telah di ubah dalam bentuk numerik, dan karena model tidak dapat membaca dalam bentuk teks atau list |
-| 6 | membuat label target populer | saya membuat jika 30 persen tertinggi baik itu rating maupun jumlah review akan di kategorikan sebagain populer | 
-| 7 | split data | untuk memisahkan data laih dan data uji |
-| 8 | smote | menyeimbangakan distribusi kelas |
-| 9 | standarscale | membuat skala fitur agar lebih beragam | 
+| No | Teknik yang Digunakan         | Alasan                                                                                             |
+|----|-------------------------------|-----------------------------------------------------------------------------------------------------|
+| 1  | Transformasi Log              | Digunakan pada kolom `jumlah_review` untuk menstabilkan varians akibat banyaknya outlier.          |
+| 2  | Interquartile Range (IQR)     | Digunakan untuk menghapus outlier yang dapat mempengaruhi distribusi data dan performa model.      |
+| 3  | Parsing String ke List        | Diperlukan agar kolom `kategori` yang awalnya berupa string list bisa diproses dalam bentuk list.  |
+| 4  | MultiLabel Encoding           | Agar model dapat membaca data multikategori setelah parsing, dengan mengubahnya menjadi numerik.   |
+| 5  | One-Hot Encoding              | Digunakan untuk mengubah fitur kategorikal seperti `provinsi` menjadi format numerik biner.        |
+| 6  | Membuat Label Target `populer`| Menandai tempat wisata sebagai populer jika masuk dalam 30% teratas berdasarkan rating/review.     |
+| 7  | Split Data (Train/Test)       | Memisahkan data latih dan data uji untuk validasi model yang lebih objektif.                       |
+| 8  | SMOTE                         | Untuk menangani ketidakseimbangan kelas (imbalanced dataset) dengan oversampling kelas minoritas.  |
+| 9  | StandardScaler                | Menstandarkan skala fitur numerik agar model tidak bias terhadap fitur dengan skala lebih besar. dan agat bisa dipakai oleh random forest dan decision tree yang mana tidak membutuhkan stadarscale dalam pediksi modelnya   |
+
+
 
 **Rubrik/Kriteria Tambahan (Opsional)**: 
 - Menjelaskan proses data preparation yang dilakukan
@@ -171,6 +165,24 @@ Pada bagian ini Anda menerapkan dan menyebutkan teknik data preparation yang dil
 
 ## Modeling
 Tahapan ini membahas mengenai model machine learning yang digunakan untuk menyelesaikan permasalahan. Anda perlu menjelaskan tahapan dan parameter yang digunakan pada proses pemodelan.
+
+| No | Model                            | Penjelasan & Parameter                                                                                                                                                      |
+| -- | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1  | **Random Forest**                | `max_depth=5`, `n_estimators=100`, `class_weight='balanced'` – Digunakan untuk menangani ketidakseimbangan class dan mencegah overfitting dengan membatasi kedalaman pohon. `False` - Karena random forest tidak membutuhkan standarscale |
+| 2  | **K-Nearest Neighbors (KNN)**    | `weights='distance'` – Memberi bobot lebih besar pada tetangga yang lebih dekat. Dikombinasikan dengan `StandardScaler()` karena KNN sensitif terhadap skala.               |
+| 3  | **Support Vector Machine (SVM)** | `class_weight='balanced'`, `probability=True` – Ditambah `StandardScaler()` karena SVM sensitif terhadap skala fitur.                                                       |
+| 4  | **Logistic Regression**          | `max_iter=1000`, `class_weight='balanced'` – Model linier klasik untuk klasifikasi, ditambah `StandardScaler()`.                                                            |
+| 5  | **Decision Tree**                | `max_depth=3`, `class_weight='balanced'`, `False` – Bekerja tanpa perlu scaling. Depth kecil menghindari overfitting.                                                                |
+
+### kelebihan dan kekurangan 
+| Model             | Kelebihan | Kekurangan |
+| ----------------- | --------- | ---------- |
+| **Random Forest** | tidak membutuhkan scaling, kuat terhadap overfitting dibandingkan dengan decission tree, stabil meski ada outlier atau noise,   | sulit diinterpretasikan, lebih lambat saat training dengan data besar         |
+| **Decision Tree** | mudah dipahami dan divisualisasikan, cepat untuk training dan prediksi, sama seperti random forest tidak butuh scaling | sangat rentan overfitting, kurang stabil |
+| **KNN** | sederhana dan intuitif, tidak membuat asumsi tentang distribusi data | sensitif terhadap skala(butuh scaling), lambat saatu prediksi jika data besar rentan terhadap outlier |
+| **svm** | bagus untuk data berdimensi tinggi, efektif dalam kasus margin yang jelas | butuh scaling, tidak cocok untuk dataset besar dan tidak seimbang, Sensitif terhadap parameter (C, kernel, gamma)|
+| **logistic regression** | cepat dan efisien untuk klasifikasi linear, mudah diinterpertesikan | kurang fleksibel untuk data non linear, bisa underfitting jika relasi antar fitur kompleks |
+
 
 **Rubrik/Kriteria Tambahan (Opsional)**: 
 - Menjelaskan kelebihan dan kekurangan dari setiap algoritma yang digunakan.
