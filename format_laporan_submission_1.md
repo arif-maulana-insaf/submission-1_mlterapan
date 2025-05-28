@@ -50,7 +50,18 @@ Parameter yang bisa dioptimalkan misalnya:
 
 ## Data Understanding
 
-saya menggunakan teknik scraping untuk mendapatkan dataset tersebut, pada tersebut terdapat 1169 baris dan 11 kolom yang saya simpan di [github_saya](https://github.com/arif-maulana-insaf/submission-1_mlterapan)
+Dataset yang digunakan dalam proyek ini adalah Dataset Tempat Wisata Indonesia yang berisi informasi komprehensif tentang destinasi wisata di seluruh Indonesia. Dataset ini dikumpulkan dengan scraping di Google Maps dan berisi 1.169 tempat wisata yang tersebar di 38 provinsi Indonesia.
+
+**Sumber Dataset**: 
+- **Tautan**: [tempat_wisata_indonesia.csv](https://github.com/NusantaraGo/NusantaraGo-ML/blob/main/Scrape_Data/tempat_wisata_indonesia.csv)
+- **Metode Pengumpulan**: Web scraping dari Google Maps
+
+**Informasi Dataset**:
+- **Jumlah data**: 1.169 tempat wisata
+- **Jumlah kolom**: 11 kolom
+- **Ukuran dataset**: (1169, 11)
+- **Kondisi data**: Dataset relatif bersih dengan beberapa missing values
+
  
 
 ### Variabel-variabel prediksi popularitas destinasi wisata di indonesia
@@ -151,27 +162,29 @@ Pada bagian ini Anda menerapkan dan menyebutkan teknik data preparation yang dil
 
 | No | Teknik yang Digunakan         | Alasan                                                                                             |
 |----|-------------------------------|-----------------------------------------------------------------------------------------------------|
-| 1  | Transformasi Log              | Digunakan pada kolom `jumlah_review` untuk menstabilkan varians akibat banyaknya outlier.          |
-| 2  | Interquartile Range (IQR)     | Digunakan untuk menghapus outlier yang dapat mempengaruhi distribusi data dan performa model.      |
-| 3  | Parsing String ke List        | Diperlukan agar kolom `kategori` yang awalnya berupa string list bisa diproses dalam bentuk list.  |
-| 4  | MultiLabel Encoding           | Agar model dapat membaca data multikategori setelah parsing, dengan mengubahnya menjadi numerik.   |
-| 5  | One-Hot Encoding              | Digunakan untuk mengubah fitur kategorikal seperti `provinsi` menjadi format numerik biner.        |
-| 6  | Membuat Label Target `populer`| Menandai tempat wisata sebagai populer jika masuk dalam 30% teratas berdasarkan rating/review.     |
-| 7  | Split Data (Train/Test)       | Memisahkan data latih dan data uji untuk validasi model yang lebih objektif.                       |
-| 8  | SMOTE                         | Untuk menangani ketidakseimbangan kelas (imbalanced dataset) dengan oversampling kelas minoritas.  |
-| 9  | StandardScaler                | Menstandarkan skala fitur numerik agar model tidak bias terhadap fitur dengan skala lebih besar. dan agat bisa dipakai oleh random forest dan decision tree yang mana tidak membutuhkan stadarscale dalam pediksi modelnya   |
+|  1 | dropna()                      | karena terdapat missing value yang mana hanya 2 baris oleh karena itu saya menghapus baris tersebut |
+| 2  | drop_columns()                | saya menghapus beberapa columns yaitu `id`, `koordinat`, `url`, `foto` karena columns tersebut tidak akan sya gunakan |
+| 3  | Transformasi Log              | Digunakan pada kolom `jumlah_review` untuk menstabilkan varians akibat banyaknya outlier.          |
+| 4  | Interquartile Range (IQR)     | Digunakan untuk menghapus outlier yang dapat mempengaruhi distribusi data dan performa model.      |
+| 5  | Parsing String ke List        | Diperlukan agar kolom `kategori` yang awalnya berupa string list bisa diproses dalam bentuk list.  |
+| 6  | MultiLabel Encoding           | Agar model dapat membaca data multikategori setelah parsing, dengan mengubahnya menjadi numerik.   |
+| 7  | One-Hot Encoding              | Digunakan untuk mengubah fitur kategorikal seperti `provinsi` menjadi format numerik biner.        |
+| 8  | Membuat Label Target `populer`| Menandai tempat wisata sebagai populer jika masuk dalam 30% teratas berdasarkan rating/review.     |
+| 9  | Split Data (Train/Test)       | Memisahkan data latih dan data uji untuk validasi model yang lebih objektif.                       |
+| 10  | SMOTE                         | Untuk menangani ketidakseimbangan kelas (imbalanced dataset) dengan oversampling kelas minoritas.  |
+| 11 | StandardScaler                | Menstandarkan skala fitur numerik agar model tidak bias terhadap fitur dengan skala lebih besar. dan agat bisa dipakai oleh random forest dan decision tree yang mana tidak membutuhkan stadarscale dalam pediksi modelnya   |
 
 
 ## Modeling
 Tahapan ini membahas mengenai model machine learning yang digunakan untuk menyelesaikan permasalahan. Anda perlu menjelaskan tahapan dan parameter yang digunakan pada proses pemodelan.
 
-| No | Model                            | Penjelasan & Parameter                                                                                                                                                      |
-| -- | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1  | **Random Forest**                | `max_depth=5`, `n_estimators=100`, `class_weight='balanced'` – Digunakan untuk menangani ketidakseimbangan class dan mencegah overfitting dengan membatasi kedalaman pohon. `False` - Karena random forest tidak membutuhkan standarscale |
-| 2  | **K-Nearest Neighbors (KNN)**    | `weights='distance'` – Memberi bobot lebih besar pada tetangga yang lebih dekat. Dikombinasikan dengan `StandardScaler()` karena KNN sensitif terhadap skala.               |
-| 3  | **Support Vector Machine (SVM)** | `class_weight='balanced'`, `probability=True` – Ditambah `StandardScaler()` karena SVM sensitif terhadap skala fitur.                                                       |
-| 4  | **Logistic Regression**          | `max_iter=1000`, `class_weight='balanced'` – Model linier klasik untuk klasifikasi, ditambah `StandardScaler()`.                                                            |
-| 5  | **Decision Tree**                | `max_depth=3`, `class_weight='balanced'`, `False` – Bekerja tanpa perlu scaling. Depth kecil menghindari overfitting.                                                                |
+| No | Model                      | Penjelasan Model                                                                                                            | Parameter & Fungsinya                                                                                                                                                                                                         | Preprocessing          |
+| -- | -------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| 1  | **Random Forest**          | Algoritma ensemble yang menggabungkan banyak decision tree. Cocok untuk menangani data tidak seimbang dan fitur non-linear. | - `max_depth=5`: membatasi kedalaman pohon untuk mencegah overfitting.<br>- `n_estimators=100`: menggunakan 100 pohon untuk ensemble.<br>- `class_weight='balanced'`: menyeimbangkan bobot antar kelas berdasarkan frekuensi. | `False` Tidak butuh scaling  |
+| 2  | **K-Nearest Neighbors**    | Klasifikasi berdasarkan kedekatan data. Sangat sensitif terhadap skala fitur.                                               | - `weights='distance'`: tetangga yang lebih dekat diberi bobot lebih besar, lebih akurat daripada bobot sama rata.<br>– `n_neighbors`: default (5), bisa dituning.                                                            | `True` Perlu StandardScaler |
+| 3  | **Support Vector Machine** | Memisahkan kelas dengan hyperplane optimal. Sangat sensitif terhadap skala dan cocok untuk data high-dimensional.           | - `class_weight='balanced'`: mengatasi imbalance class.<br>- `probability=True`: memungkinkan model untuk menghitung probabilitas prediksi (dibutuhkan untuk evaluasi ROC AUC atau stacking model).                           | `True` Perlu StandardScaler |
+| 4  | **Logistic Regression**    | Model linier klasik untuk klasifikasi. Simpel dan cepat, cocok untuk baseline dan interpretasi awal.                        | - `max_iter=1000`: memastikan model cukup iterasi hingga konvergen.<br>- `class_weight='balanced'`: menangani class imbalance agar tidak bias ke mayoritas.                                                                   | `True` Perlu StandardScaler |
+| 5  | **Decision Tree**          | Model pohon sederhana yang mampu menyesuaikan terhadap berbagai jenis data. Mudah diinterpretasi.                           | - `max_depth=3`: membatasi kedalaman untuk menghindari overfitting.<br>- `class_weight='balanced'`: menangani ketidakseimbangan antar kelas.<br>- `criterion`: default ‘gini’ untuk mengukur impuritas node.                  | `False` Tidak butuh scaling  |
 
 
 ### kelebihan dan kekurangan 
@@ -211,6 +224,7 @@ pada bagian evaluasi ini saya menggunakan
 | 3  | **K-Nearest Neighbors** | 59.15       | 0.53     | 0.68                | 0.44             | Performa cukup buruk. Perlu tuning parameter. Sensitif terhadap distribusi data.                            |
 | 4  | **Logistic Regression** | 56.81       | 0.51     | 0.64                | 0.42             | Hasil kurang memuaskan. Sulit membedakan tempat populer dan tidak populer.                                  |
 | 5  | **SVM**                 | 46.95       | 0.00     | 0.00                | 0.00             | Gagal mengenali kelas populer. Tidak layak digunakan tanpa perbaikan skala/fit.                             |
+
 
 ### perbandingan evaluasi model 
 ![image](https://github.com/user-attachments/assets/f682bf42-f32b-4159-b803-6947c78ff0ce)
