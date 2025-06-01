@@ -50,7 +50,7 @@ Parameter yang bisa dioptimalkan misalnya:
 
 ## Data Understanding
 
-Dataset yang digunakan dalam proyek ini adalah Dataset Tempat Wisata Indonesia yang berisi informasi komprehensif tentang destinasi wisata di seluruh Indonesia. Dataset ini dikumpulkan dengan scraping di Google Maps dan berisi 1.169 tempat wisata yang tersebar di 38 provinsi Indonesia.
+Dataset yang digunakan dalam proyek ini adalah Dataset Tempat Wisata Indonesia yang berisi informasi komprehensif tentang destinasi wisata di seluruh Indonesia. Dataset ini dikumpulkan dengan scraping di Google Maps dan berisi 1.169 tempat wisata yang tersebar di 38 provinsi Indonesia. dan ini saya kumpulkan dan saya upload di github beserta cara saya scarpinya juga
 
 **Sumber Dataset**: 
 - **Tautan**: [tempat_wisata_indonesia.csv](https://github.com/NusantaraGo/NusantaraGo-ML/blob/main/Scrape_Data/tempat_wisata_indonesia.csv)
