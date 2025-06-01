@@ -50,7 +50,7 @@ Parameter yang bisa dioptimalkan misalnya:
 
 ## Data Understanding
 
-Dataset yang digunakan dalam proyek ini adalah Dataset Tempat Wisata Indonesia yang berisi informasi komprehensif tentang destinasi wisata di seluruh Indonesia. Dataset ini dikumpulkan dengan scraping di Google Maps dan berisi 1.169 tempat wisata yang tersebar di 38 provinsi Indonesia. dan ini saya kumpulkan dan saya upload di github beserta cara saya scarpinya juga
+Dataset yang digunakan dalam proyek ini adalah Dataset Tempat Wisata Indonesia yang berisi informasi komprehensif tentang destinasi wisata di seluruh Indonesia. Dataset ini dikumpulkan dengan scraping di Google Maps dan berisi 1.169 tempat wisata yang tersebar di 38 provinsi Indonesia. dan ini saya kumpulkan dan saya upload di github beserta cara saya scarpinya juga.
 
 **Sumber Dataset**: 
 - **Tautan**: [tempat_wisata_indonesia.csv](https://github.com/NusantaraGo/NusantaraGo-ML/blob/main/Scrape_Data/tempat_wisata_indonesia.csv)
@@ -178,23 +178,121 @@ Pada bagian ini Anda menerapkan dan menyebutkan teknik data preparation yang dil
 ## Modeling
 Tahapan ini membahas mengenai model machine learning yang digunakan untuk menyelesaikan permasalahan. Anda perlu menjelaskan tahapan dan parameter yang digunakan pada proses pemodelan.
 
-| No | Model                      | Penjelasan Model                                                                                                            | Parameter & Fungsinya                                                                                                                                                                                                         | Preprocessing          |
-| -- | -------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
-| 1  | **Random Forest**          | Algoritma ensemble yang menggabungkan banyak decision tree. Cocok untuk menangani data tidak seimbang dan fitur non-linear. | - `max_depth=5`: membatasi kedalaman pohon untuk mencegah overfitting.<br>- `n_estimators=100`: menggunakan 100 pohon untuk ensemble.<br>- `class_weight='balanced'`: menyeimbangkan bobot antar kelas berdasarkan frekuensi. | `False` Tidak butuh scaling  |
-| 2  | **K-Nearest Neighbors**    | Klasifikasi berdasarkan kedekatan data. Sangat sensitif terhadap skala fitur.                                               | - `weights='distance'`: tetangga yang lebih dekat diberi bobot lebih besar, lebih akurat daripada bobot sama rata.<br>– `n_neighbors`: default (5), bisa dituning.                                                            | `True` Perlu StandardScaler |
-| 3  | **Support Vector Machine** | Memisahkan kelas dengan hyperplane optimal. Sangat sensitif terhadap skala dan cocok untuk data high-dimensional.           | - `class_weight='balanced'`: mengatasi imbalance class.<br>- `probability=True`: memungkinkan model untuk menghitung probabilitas prediksi (dibutuhkan untuk evaluasi ROC AUC atau stacking model).                           | `True` Perlu StandardScaler |
-| 4  | **Logistic Regression**    | Model linier klasik untuk klasifikasi. Simpel dan cepat, cocok untuk baseline dan interpretasi awal.                        | - `max_iter=1000`: memastikan model cukup iterasi hingga konvergen.<br>- `class_weight='balanced'`: menangani class imbalance agar tidak bias ke mayoritas.                                                                   | `True` Perlu StandardScaler |
-| 5  | **Decision Tree**          | Model pohon sederhana yang mampu menyesuaikan terhadap berbagai jenis data. Mudah diinterpretasi.                           | - `max_depth=3`: membatasi kedalaman untuk menghindari overfitting.<br>- `class_weight='balanced'`: menangani ketidakseimbangan antar kelas.<br>- `criterion`: default ‘gini’ untuk mengukur impuritas node.                  | `False` Tidak butuh scaling  |
+### random forest
+Random Forest adalah algoritma ensemble learning berbasis decision tree. Ia bekerja dengan membuat banyak decision tree secara acak (randomized trees), lalu menggabungkan hasilnya (voting untuk klasifikasi, rata-rata untuk regresi). Sangat handal terhadap outlier, data tidak linear, dan tidak membutuhkan scaling fitur.
+
+| parameternya | fungsinya |
+|---------------|--------|
+| `max_depth=5` | Membatasi kedalaman (jumlah level) dari setiap pohon agar tidak terlalu kompleks, mencegah overfitting terhadap data latih. |
+| `n_estimators=100` | Menentukan jumlah pohon (tree) dalam ensemble. Semakin banyak pohon, semakin stabil dan akurat model, namun waktu komputasi juga bertambah. |
+| `class_weight='balanced'` | Menyesuaikan bobot kelas secara otomatis berdasarkan frekuensi. Berguna jika jumlah data antar kelas tidak seimbang (misalnya, kelas mayoritas 90%, minoritas 10%). |
+
+disini saya mengkategorikan sebagai `False` karena tidak butuh standarscaler
 
 
-### kelebihan dan kekurangan 
-| Model             | Kelebihan | Kekurangan |
-| ----------------- | --------- | ---------- |
-| **Random Forest** | tidak membutuhkan scaling, kuat terhadap overfitting dibandingkan dengan decission tree, stabil meski ada outlier atau noise,   | sulit diinterpretasikan, lebih lambat saat training dengan data besar         |
-| **Decision Tree** | mudah dipahami dan divisualisasikan, cepat untuk training dan prediksi, sama seperti random forest tidak butuh scaling | sangat rentan overfitting, kurang stabil |
-| **KNN** | sederhana dan intuitif, tidak membuat asumsi tentang distribusi data | sensitif terhadap skala(butuh scaling), lambat saatu prediksi jika data besar rentan terhadap outlier |
-| **svm** | bagus untuk data berdimensi tinggi, efektif dalam kasus margin yang jelas | butuh scaling, tidak cocok untuk dataset besar dan tidak seimbang, Sensitif terhadap parameter (C, kernel, gamma)|
-| **logistic regression** | cepat dan efisien untuk klasifikasi linear, mudah diinterpertesikan | kurang fleksibel untuk data non linear, bisa underfitting jika relasi antar fitur kompleks |
+### kelebihaan dan kekurangan random forest
+#### kelebihan
+- Akurasi tinggi: Menggabungkan banyak pohon membuat prediksi lebih stabil dan kuat terhadap overfitting.
+- Robust terhadap outlier dan noise: Tidak mudah dipengaruhi oleh data ekstrem.
+- Cocok untuk data dengan fitur non-linear: Karena setiap tree dapat membagi data secara non-linear.
+- Menangani missing value dan data imbalance dengan baik.
+- Tidak perlu scaling atau normalisasi fitur.
+#### kekuragan
+- Kurang interpretatif: Sulit menjelaskan bagaimana prediksi dibuat karena banyaknya pohon (model kompleks).
+- Waktu prediksi relatif lambat untuk dataset besar (karena harus memproses banyak pohon).
+- Model besar: Konsumsi memori tinggi karena menyimpan banyak tree.
+
+
+
+### K-nearest neightbors (KNN)
+KNN adalah model instance-based learning, di mana prediksi dilakukan berdasarkan kedekatan (jarak) ke beberapa tetangga terdekat (biasanya menggunakan Euclidean Distance). Tidak ada proses pelatihan aktual model menyimpan semua data latih.
+
+| parameternya | fungsinya |
+|---------------|--------|
+| `weights='distance'` | Memberi bobot lebih besar pada tetangga yang lebih dekat. Artinya, tetangga yang lebih jauh kurang berpengaruh, sehingga hasil lebih akurat dibandingkan bobot rata (uniform). |
+| `n_neighbors=5` | Jumlah tetangga terdekat yang dipertimbangkan saat menentukan kelas target. Nilai default 5, namun bisa disesuaikan untuk optimasi performa. |
+
+disini saya mengkategorikan sebagai `True` karena butuh standarscaler
+
+### kelebihan dan kekurangan K-nearest neightbors (KNN)
+#### kelebihan
+- Mudah dipahami dan diimplementasikan: Konsep intuitif berdasarkan tetangga terdekat.
+- Tidak ada proses pelatihan: Cukup menyimpan data latih (lazy learner).
+- Adaptif terhadap bentuk distribusi data: Tidak mengasumsikan distribusi linear.
+#### kekurangan
+- Waktu prediksi lambat: Harus menghitung jarak ke semua titik saat memprediksi (tidak efisien untuk data besar).
+- Sensitif terhadap skala fitur dan outlier: Fitur yang besar bisa mendominasi jarak, outlier bisa menyesatkan.
+- Tidak cocok untuk data berdimensi tinggi (curse of dimensionality).
+- Tidak melakukan generalisasi: Hanya "menyontek" data pelatihan.
+
+### Support Vector Machine (SVM)
+SVM adalah model diskriminatif yang mencari hyperplane terbaik yang memisahkan kelas-kelas data dengan margin maksimum. Sangat efektif untuk data high-dimensional dan bisa menggunakan kernel untuk menangani non-linearitas.
+
+| parameternya | fungsinya |
+|---------------|--------|
+| `class_weight='balanced'` | Menyeimbangkan bobot kelas secara otomatis berdasarkan frekuensi data. Sangat penting untuk menghindari bias ke kelas mayoritas. |
+| `probability=True` | Mengaktifkan kemampuan untuk menghitung probabilitas prediksi, bukan hanya label. Berguna untuk evaluasi model (misalnya ROC AUC) dan stacking ensemble. |
+
+disini saya mengkategorikan sebagai `True` karena butuh standarscaler
+
+### kelebihan dan kekurangan Support Vector Machine (SVM)
+#### kelebihan
+- Akurasi tinggi pada data high-dimensional: Efektif saat jumlah fitur besar.
+- Tahan terhadap overfitting jika parameter disetel dengan benar.
+- Dapat menggunakan kernel untuk menangani data yang tidak linear (misalnya kernel RBF, polynomial).
+- Fokus pada support vectors: Hanya sebagian data yang berpengaruh, membuat model efisien secara konsep.
+#### kekurangan 
+- Waktu pelatihan bisa lama untuk dataset besar.
+- Sulit diinterpretasikan: Tidak mudah menjelaskan keputusan model (terutama dengan kernel).
+- Perlu scaling fitur: Sangat sensitif terhadap perbedaan skala.
+- Pemilihan parameter (C, kernel, gamma) krusial dan kompleks.
+
+
+### Logistic Regression
+Logistic Regression adalah model linier yang digunakan untuk klasifikasi biner (atau multinomial). Ia menghitung probabilitas dari suatu data termasuk ke dalam suatu kelas berdasarkan fungsi logistik (sigmoid). Sangat cocok untuk baseline atau ketika interpretasi model penting.
+
+| parameternya | fungsinya |
+|---------------|--------|
+| `max_iter=1000` | Menentukan jumlah maksimum iterasi pelatihan. Jika data kompleks, iterasi kecil bisa gagal konvergen. Disetel tinggi agar model memiliki cukup waktu belajar. |
+| `class_weight='balanced'` | Menangani class imbalance dengan memberi penalti lebih besar pada kesalahan di kelas minoritas, mencegah model bias ke mayoritas. |
+
+disini saya mengkategorikan sebagai `True` karena butuh standarscaler
+
+### kelebihan dan kekurangan Logistic Regression
+#### kelebihan 
+- Cepat dan efisien: Pelatihan dan prediksi cepat, cocok untuk dataset besar dan baseline.
+- Interpretatif: Koefisien model menunjukkan pengaruh fitur (positif atau negatif) secara langsung.
+- Dapat diperluas ke klasifikasi multikelas dengan pendekatan one-vs-rest atau softmax.
+- Mudah dituning dan jarang overfitting jika fitur tidak terlalu banyak.
+#### kekurangan
+- Kinerja buruk untuk data non-linear: Model linier tidak bisa memisahkan kelas yang bentuknya non-linear.
+- Perlu scaling agar bobot fitur adil.
+- Rentan terhadap multikolinearitas antar fitur.
+- Tidak cocok untuk data dengan interaksi fitur kompleks.
+
+
+### Decision Tree
+Decision Tree adalah model berbentuk pohon yang membagi data berdasarkan fitur untuk mencapai prediksi. Setiap simpul pohon memutuskan pembagian berdasarkan fitur yang menghasilkan impuritas paling rendah. Mudah dimengerti dan tidak memerlukan scaling.
+
+| parameternya | fungsinya |
+|---------------|--------|
+| `max_depth=3` | Membatasi kedalaman pohon hingga 3 level saja, untuk menghindari overfitting dan meningkatkan interpretabilitas. |
+| `class_weight='balanced'` | Sama seperti model lain, memberi bobot lebih tinggi pada kelas minoritas, membantu mengatasi distribusi kelas yang tidak merata. |
+| `criterion='gini'` | Ukuran untuk memilih fitur pemisah di setiap simpul. Gini impurity mengukur ketidakteraturan dalam node (default). Alternatifnya adalah 'entropy'. |
+
+disini saya mengkategorikan sebagai `False` karena tidak butuh standarscaler
+
+### kelebihan dan kekurangan Decision Tree
+#### kelebihan 
+- Sangat interpretatif: Struktur pohon bisa divisualisasikan dan dijelaskan secara logis.
+- Tidak butuh scaling atau normalisasi.
+- Dapat menangani fitur kategorikal dan numerik sekaligus.
+- Cepat dilatih dan diprediksi, cocok untuk aplikasi real-time.
+#### kekurangan
+- Mudah overfitting: Jika tidak dibatasi (misalnya max_depth), pohon akan belajar noise.
+- Cenderung tidak stabil: Perubahan kecil pada data bisa menghasilkan struktur pohon yang sangat berbeda.
+- Kurang akurat dibandingkan model ensemble (seperti Random Forest).
+- Tidak cocok untuk data dengan banyak noise.
 
 
 ## Evaluation
