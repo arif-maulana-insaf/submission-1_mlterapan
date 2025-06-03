@@ -171,8 +171,7 @@ Pada bagian ini Anda menerapkan dan menyebutkan teknik data preparation yang dil
 | 7  | One-Hot Encoding              | Digunakan untuk mengubah fitur kategorikal seperti `provinsi` menjadi format numerik biner.        |
 | 8  | Membuat Label Target `populer`| Menandai tempat wisata sebagai populer jika masuk dalam 30% teratas berdasarkan rating/review.     |
 | 9  | Split Data (Train/Test)       | Memisahkan data latih dan data uji untuk validasi model yang lebih objektif.                       |
-| 10  | SMOTE                         | Untuk menangani ketidakseimbangan kelas (imbalanced dataset) dengan oversampling kelas minoritas.  |
-| 11 | StandardScaler                | Menstandarkan skala fitur numerik agar model tidak bias terhadap fitur dengan skala lebih besar. dan agat bisa dipakai oleh random forest dan decision tree yang mana tidak membutuhkan stadarscale dalam pediksi modelnya   |
+| 10 | StandardScaler                | Menstandarkan skala fitur numerik agar model tidak bias terhadap fitur dengan skala lebih besar. dan agat bisa dipakai oleh random forest dan decision tree yang mana tidak membutuhkan stadarscale dalam pediksi modelnya   |
 
 
 ## Modeling
@@ -315,13 +314,14 @@ pada bagian evaluasi ini saya menggunakan
 
 ### berikut adalah hasil dan perbandingan yang saya dapatkan
 
-| # | Model                   | Akurasi (%) | F1-Score | Precision (Populer) | Recall (Populer) | Evaluasi                                                                                                    |
-| -- | ----------------------- | ----------- | -------- | ------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------- |
-| 1  | **Random Forest**       | 78.87       | 0.76     | 0.97                | 0.62             | Performa terbaik. Akurasi tinggi dan presisi sangat baik. Recall agak rendah. Cocok untuk penggunaan utama. |
-| 2  | **Decision Tree**       | 76.99       | 0.73     | 0.96                | 0.59             | Alternatif baik, mirip Random Forest namun sedikit lebih rendah. Komputasi lebih ringan.                    |
-| 3  | **K-Nearest Neighbors** | 59.15       | 0.53     | 0.68                | 0.44             | Performa cukup buruk. Perlu tuning parameter. Sensitif terhadap distribusi data.                            |
-| 4  | **Logistic Regression** | 56.81       | 0.51     | 0.64                | 0.42             | Hasil kurang memuaskan. Sulit membedakan tempat populer dan tidak populer.                                  |
-| 5  | **SVM**                 | 46.95       | 0.00     | 0.00                | 0.00             | Gagal mengenali kelas populer. Tidak layak digunakan tanpa perbaikan skala/fit.                             |
+| # | Model                   | Akurasi (%) | F1-Score | Precision (Populer) | Recall (Populer) | Evaluasi                                                                                                                         |
+| - | ----------------------- | ----------- | -------- | ------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| 1 | **Random Forest**       | 78.87       | 0.76     | 0.97                | 0.62             | **Performa terbaik secara keseluruhan.** Akurasi tinggi, precision sangat tinggi. Recall agak rendah. Cocok sebagai model utama. |
+| 2 | **Decision Tree**       | 78.87       | 0.75     | 1.00                | 0.60             | Alternatif yang baik. Mirip Random Forest tapi dengan struktur model yang lebih ringan dan cepat.                                |
+| 3 | **K-Nearest Neighbors** | 59.15       | 0.58     | 0.64                | 0.53             | Cukup lemah. Sensitif terhadap distribusi data. Perlu tuning `k` atau metode scaling yang lebih baik.                            |
+| 4 | **SVM**                 | 53.05       | 0.69     | 0.53                | 1.00             | Recall sempurna tapi precision 0 pada kelas tidak populer. Overfitting pada kelas populer. Perlu perbaikan.                      |
+| 5 | **Logistic Regression** | 51.64       | 0.30     | 0.65                | 0.19             | Performa buruk. Gagal mengenali tempat populer secara konsisten. Tidak cocok tanpa perbaikan signifikan.                         |
+
 
 
 ### perbandingan evaluasi model 
@@ -352,7 +352,8 @@ pada model ini fn 0, maksudnya model membaca 100% akurat untuk `tidak populer` a
 
 ### roc curve dan auc score
 
-![image](https://github.com/user-attachments/assets/87c2412e-c37b-4c32-b04e-dc49e105be37)
+![image](https://github.com/user-attachments/assets/3a6a6ea7-5ba9-477b-a2a9-2fbf6f60b604)
+
 
 #### catatan 
 - True Positive Rate (TPR) = Sensitivitas = Recall
@@ -361,7 +362,7 @@ pada model ini fn 0, maksudnya model membaca 100% akurat untuk `tidak populer` a
 | Model                   | AUC      | Evaluasi                                                            |
 | ----------------------- | -------- | ------------------------------------------------------------------- |
 | **Decision Tree**       | **0.84** | **Terbaik** dalam membedakan kelas, sangat baik untuk klasifikasi.  |
-| **Random Forest**       | 0.81     | Hampir sebaik Decision Tree, performa stabil dan kuat.              |
+| **Random Forest**       | 0.82     | Hampir sebaik Decision Tree, performa stabil dan kuat.              |
 | **Logistic Regression** | 0.61     | Di atas tebakan acak, tapi jauh lebih rendah dari model tree-based. |
 | **KNN**                 | 0.60     | Performa buruk, hanya sedikit lebih baik dari tebakan acak.         |
 | **SVM**                 | 0.59     | Hampir sama seperti KNN, **sangat tidak optimal** pada dataset ini. |
