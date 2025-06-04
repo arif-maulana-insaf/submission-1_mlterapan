@@ -186,8 +186,6 @@ Random Forest adalah algoritma ensemble learning berbasis decision tree. Ia beke
 | `n_estimators=100` | Menentukan jumlah pohon (tree) dalam ensemble. Semakin banyak pohon, semakin stabil dan akurat model, namun waktu komputasi juga bertambah. |
 | `class_weight='balanced'` | Menyesuaikan bobot kelas secara otomatis berdasarkan frekuensi. Berguna jika jumlah data antar kelas tidak seimbang (misalnya, kelas mayoritas 90%, minoritas 10%). |
 
-disini saya mengkategorikan sebagai `False` karena tidak butuh standarscaler
-
 
 ### kelebihaan dan kekurangan random forest
 #### kelebihan
@@ -211,8 +209,6 @@ KNN adalah model instance-based learning, di mana prediksi dilakukan berdasarkan
 | `weights='distance'` | Memberi bobot lebih besar pada tetangga yang lebih dekat. Artinya, tetangga yang lebih jauh kurang berpengaruh, sehingga hasil lebih akurat dibandingkan bobot rata (uniform). |
 | `n_neighbors=5` | Jumlah tetangga terdekat yang dipertimbangkan saat menentukan kelas target. Nilai default 5, namun bisa disesuaikan untuk optimasi performa. |
 
-disini saya mengkategorikan sebagai `True` karena butuh standarscaler
-
 ### kelebihan dan kekurangan K-nearest neightbors (KNN)
 #### kelebihan
 - Mudah dipahami dan diimplementasikan: Konsep intuitif berdasarkan tetangga terdekat.
@@ -231,8 +227,6 @@ SVM adalah model diskriminatif yang mencari hyperplane terbaik yang memisahkan k
 |---------------|--------|
 | `class_weight='balanced'` | Menyeimbangkan bobot kelas secara otomatis berdasarkan frekuensi data. Sangat penting untuk menghindari bias ke kelas mayoritas. |
 | `probability=True` | Mengaktifkan kemampuan untuk menghitung probabilitas prediksi, bukan hanya label. Berguna untuk evaluasi model (misalnya ROC AUC) dan stacking ensemble. |
-
-disini saya mengkategorikan sebagai `True` karena butuh standarscaler
 
 ### kelebihan dan kekurangan Support Vector Machine (SVM)
 #### kelebihan
@@ -254,8 +248,6 @@ Logistic Regression adalah model linier yang digunakan untuk klasifikasi biner (
 |---------------|--------|
 | `max_iter=1000` | Menentukan jumlah maksimum iterasi pelatihan. Jika data kompleks, iterasi kecil bisa gagal konvergen. Disetel tinggi agar model memiliki cukup waktu belajar. |
 | `class_weight='balanced'` | Menangani class imbalance dengan memberi penalti lebih besar pada kesalahan di kelas minoritas, mencegah model bias ke mayoritas. |
-
-disini saya mengkategorikan sebagai `True` karena butuh standarscaler
 
 ### kelebihan dan kekurangan Logistic Regression
 #### kelebihan 
@@ -279,7 +271,6 @@ Decision Tree adalah model berbentuk pohon yang membagi data berdasarkan fitur u
 | `class_weight='balanced'` | Sama seperti model lain, memberi bobot lebih tinggi pada kelas minoritas, membantu mengatasi distribusi kelas yang tidak merata. |
 | `criterion='gini'` | Ukuran untuk memilih fitur pemisah di setiap simpul. Gini impurity mengukur ketidakteraturan dalam node (default). Alternatifnya adalah 'entropy'. |
 
-disini saya mengkategorikan sebagai `False` karena tidak butuh standarscaler
 
 ### kelebihan dan kekurangan Decision Tree
 #### kelebihan 
@@ -313,59 +304,73 @@ pada bagian evaluasi ini saya menggunakan
 
 
 ### berikut adalah hasil dan perbandingan yang saya dapatkan
-
 | # | Model                   | Akurasi (%) | F1-Score | Precision (Populer) | Recall (Populer) | Evaluasi                                                                                                                         |
 | - | ----------------------- | ----------- | -------- | ------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | 1 | **Random Forest**       | 78.87       | 0.76     | 0.97                | 0.62             | **Performa terbaik secara keseluruhan.** Akurasi tinggi, precision sangat tinggi. Recall agak rendah. Cocok sebagai model utama. |
-| 2 | **Decision Tree**       | 78.87       | 0.75     | 1.00                | 0.60             | Alternatif yang baik. Mirip Random Forest tapi dengan struktur model yang lebih ringan dan cepat.                                |
-| 3 | **K-Nearest Neighbors** | 59.15       | 0.58     | 0.64                | 0.53             | Cukup lemah. Sensitif terhadap distribusi data. Perlu tuning `k` atau metode scaling yang lebih baik.                            |
-| 4 | **SVM**                 | 53.05       | 0.69     | 0.53                | 1.00             | Recall sempurna tapi precision 0 pada kelas tidak populer. Overfitting pada kelas populer. Perlu perbaikan.                      |
-| 5 | **Logistic Regression** | 51.64       | 0.30     | 0.65                | 0.19             | Performa buruk. Gagal mengenali tempat populer secara konsisten. Tidak cocok tanpa perbaikan signifikan.                         |
+| 2 | **Decision Tree**       | 78.87       | 0.75     | 1.00                | 0.60             | Alternatif yang sangat mirip Random Forest, tapi lebih ringan dan cepat.                                                         |
+| 3 | **Logistic Regression** | 70.89       | 0.73     | 0.72                | 0.74             | Performa seimbang, cocok untuk baseline. Tidak sebaik tree-based model tapi stabil.                                              |
+| 4 | **SVM**                 | 70.42       | 0.72     | 0.72                | 0.73             | Performa cukup baik. Tidak sekuat Random Forest atau Decision Tree, tapi tetap layak dipertimbangkan.                            |
+| 5 | **K-Nearest Neighbors** | 67.61       | 0.69     | 0.70                | 0.67             | Paling lemah di antara semua model. Perlu tuning parameter `k` lebih lanjut.                                                     |
+
 
 
 
 ### perbandingan evaluasi model 
-![image](https://github.com/user-attachments/assets/f682bf42-f32b-4159-b803-6947c78ff0ce)
+![image](https://github.com/user-attachments/assets/916793a4-bb8d-41ed-9436-440edecd2df8)
+
 
 dapaat dilihat dari perbandingan hasil evalusai tersebut random forest dan decision tree adalah model yang paling seimbang dari yang lainnya
 
 ### confusion matrix
 ![image](https://github.com/user-attachments/assets/c9667c6a-3861-472c-9ae6-b4b99376523f)
 
-pada tp hanya 2, maksudnya dari total kesalahan hanya 2 yang populer itu salah, akan tetapi fp 43 dari 113 data populer ini salah
+- Model memiliki akurasi tinggi dalam memprediksi "Tidak Populer" (98 benar, 2 salah).
+- Prediksi "Populer" cukup baik (70 benar) tetapi masih ada kesalahan (43 salah).
+- Performa lebih konsisten dibandingkan Decision Tree sebelumnya, terutama untuk kelas minoritas ("Populer").
+- Rekomendasi: Evaluasi lebih lanjut untuk mengurangi false negative (43 prediksi "Populer" yang salah) dengan teknik seperti class weighting atau data augmentation.
 
-![image](https://github.com/user-attachments/assets/dafc27ad-175b-46b5-9029-8033bc2d9a0f)
+![image](https://github.com/user-attachments/assets/aa9a41d6-3537-4bbe-a436-a7a5c7837d5c)
 
-pada tp terdapat 34 kesalahan, yang mana ini mampu mendeteksi data populer tetapi banyak masalah, dan model ini kurang efektif
+- Model memiliki akurasi yang baik dalam memprediksi kelas "Tidak Populer" (100 benar, 0 salah).
+- Performa model pada kelas "Populer" kurang konsisten (68 benar, tetapi ada 45 dan 40 prediksi salah).
+- Terdapat ketidakseimbangan klasifikasi, terutama saat memprediksi "Populer" sebagai "Tidak Populer".
+- Secara umum, model lebih andal untuk prediksi "Tidak Populer" dibandingkan "Populer".
 
-![image](https://github.com/user-attachments/assets/99eb843d-df8d-4e54-933e-9d245012eef4)
+![image](https://github.com/user-attachments/assets/15b7650f-e94e-4c38-a2f8-f9f78f301b68)
 
-pada model ini sangat bermasalah karena fp terdapat 100 yang mana ini maksudnya model tidak mengenali tidak populer sama sekali
+- Model menunjukkan performa yang cukup baik dengan prediksi benar (68 Tidak Populer dan 76 Populer).
+- Namun, masih ada kesalahan prediksi (32 dan 37), terutama pada klasifikasi "Populer".
+- Rekomendasi: Optimalkan model (misalnya dengan tuning hyperparameter) untuk mengurangi kesalahan, khususnya pada kelas minoritas jika ada ketidakseimbangan data.
 
-![image](https://github.com/user-attachments/assets/aa06c230-13ea-48f7-9915-72b733de77d5)
+![image](https://github.com/user-attachments/assets/441f593a-a751-4f56-a56c-7ff00969cf54)
 
-pada model ini fn 91 yang mana model tidak mengenali populer sama sekali karena model condong di tidak populer
+- Akurasi tinggi untuk prediksi "Populer" (83 benar), tetapi masih ada kesalahan (30 salah).
+- Prediksi "Tidak Populer" cukup baik (67 benar), meski terdapat 33 misklasifikasi.
+- Rekomendasi: Fokus pada peningkatan prediksi "Tidak Populer", seperti penyeimbangan data atau optimasi model.
 
-![image](https://github.com/user-attachments/assets/a5548ef5-eba3-4d9f-81f6-aa77af27d697)
+![image](https://github.com/user-attachments/assets/aec5df18-f05d-4884-a9ff-62f6d9539598)
 
-pada model ini fn 0, maksudnya model membaca 100% akurat untuk `tidak populer` akan tetapi masih bermasalah pada fn masih terdapat masalah 45 data klasifikasi yang salah 
+- Prediksi "Populer" sangat akurat (84 benar) dengan sedikit kesalahan (29 salah).
+- Prediksi "Tidak Populer" cukup baik (67 benar) namun masih ada 33 kesalahan.
+- Rekomendasi: Tingkatkan akurasi untuk kelas "Tidak Populer" dengan teknik seperti resampling atau feature engineering.
 
 ### roc curve dan auc score
 
-![image](https://github.com/user-attachments/assets/3a6a6ea7-5ba9-477b-a2a9-2fbf6f60b604)
+![image](https://github.com/user-attachments/assets/7220c6fe-8e8e-4c84-8d01-811676ef09a1)
 
 
 #### catatan 
 - True Positive Rate (TPR) = Sensitivitas = Recall
 - False Positive Rate (FPR) = 1 - Spesifisitas
 
-| Model                   | AUC      | Evaluasi                                                            |
-| ----------------------- | -------- | ------------------------------------------------------------------- |
-| **Decision Tree**       | **0.84** | **Terbaik** dalam membedakan kelas, sangat baik untuk klasifikasi.  |
-| **Random Forest**       | 0.82     | Hampir sebaik Decision Tree, performa stabil dan kuat.              |
-| **Logistic Regression** | 0.61     | Di atas tebakan acak, tapi jauh lebih rendah dari model tree-based. |
-| **KNN**                 | 0.60     | Performa buruk, hanya sedikit lebih baik dari tebakan acak.         |
-| **SVM**                 | 0.59     | Hampir sama seperti KNN, **sangat tidak optimal** pada dataset ini. |
+| **Model**               | **AUC**  | **Evaluasi**                                                               |
+| ----------------------- | -------- | -------------------------------------------------------------------------- |
+| **Decision Tree**       | **0.84** | Performa terbaik dalam membedakan kelas, sangat cocok untuk klasifikasi.   |
+| **Random Forest**       | 0.83     | Hampir sebaik Decision Tree, kuat dan stabil, cocok untuk generalisasi.    |
+| **SVM**                 | 0.80     | Cukup baik, menunjukkan kemampuan diskriminatif yang layak.                |
+| **Logistic Regression** | 0.80     | Sejajar dengan SVM, performa cukup stabil meskipun lebih sederhana.        |
+| **KNN**                 | 0.73     | Performa paling rendah di antara model lain, sensitif terhadap skala data. |
+
 
 
 
